@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Route, BrowserRouter, Routes, useNavigate } from 'react-router-dom';
+import { Auth0Provider, withAuthenticationRequired } from '@auth0/auth0-react';
+import Profile from './Profile';
 
-function App() {
+const ProtectedRoute = ({ component, ...args }) => {
+  const Component = withAuthenticationRequired(component, args);
+  return <Component />;
+};
+
+const Auth0ProviderWithRedirectCallback = ({ children, ...props }) => {
+  const navigate = useNavigate();
+  const onRedirectCallback = (appState) => {
+    navigate((appState && appState.returnTo) || window.location.pathname);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Auth0Provider onRedirectCallback={onRedirectCallback} {...props}>
+      {children}
+    </Auth0Provider>
+  );
+};
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Auth0ProviderWithRedirectCallback
+        domain="YOUR_AUTH0_DOMAIN"
+        clientId="YOUR_AUTH0_CLIENT_ID"
+        redirectUri={window.location.origin}
+      >
+        <Routes>
+          <Route path="/" exact />
+          <Route
+            path="/profile"
+            element={<ProtectedRoute component={Profile} />}
+          />
+        </Routes>
+      </Auth0ProviderWithRedirectCallback>
+    </BrowserRouter>
   );
 }
-
-export default App;
