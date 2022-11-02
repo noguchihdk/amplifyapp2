@@ -1,41 +1,40 @@
-import React from 'react';
-import { Route, BrowserRouter, Routes, useNavigate } from 'react-router-dom';
-import { Auth0Provider, withAuthenticationRequired } from '@auth0/auth0-react';
-import Profile from './Profile';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { useAuth0 } from "@auth0/auth0-react";
 
-const ProtectedRoute = ({ component, ...args }) => {
-  const Component = withAuthenticationRequired(component, args);
-  return <Component />;
-};
+function App() {
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
-const Auth0ProviderWithRedirectCallback = ({ children, ...props }) => {
-  const navigate = useNavigate();
-  const onRedirectCallback = (appState) => {
-    navigate((appState && appState.returnTo) || window.location.pathname);
-  };
   return (
-    <Auth0Provider onRedirectCallback={onRedirectCallback} {...props}>
-      {children}
-    </Auth0Provider>
-  );
-};
-
-export default function App() {
-  return (
-    <BrowserRouter>
-      <Auth0ProviderWithRedirectCallback
-        domain="nttdata-partner.auth0.com"
-        clientId="PSBpf1hFP1t3YwzchJ9cN7qm2XJHfqaD"
-        redirectUri={window.location.origin}
-      >
-        <Routes>
-          <Route path="/" exact />
-          <Route
-            path="/profile"
-            element={<ProtectedRoute component={Profile} />}
-          />
-        </Routes>
-      </Auth0ProviderWithRedirectCallback>
-    </BrowserRouter>
+    <div className="App">
+      <header className="App-header">
+        {!isAuthenticated ? (
+          <button onClick={loginWithRedirect}>Log in</button>
+        ) : (
+          <button
+            onClick={() => {
+              logout({ returnTo: window.location.origin });
+            }}
+          >
+            Log out
+          </button>
+        )}
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.tsx</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
   );
 }
+
+export default App;
