@@ -24,8 +24,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <Auth0ProviderWithRedirectCallback
-        domain="YOUR_AUTH0_DOMAIN"
-        clientId="YOUR_AUTH0_CLIENT_ID"
+        domain="nttdata-partner.auth0.com"
+        clientId="PSBpf1hFP1t3YwzchJ9cN7qm2XJHfqaD"
         redirectUri={window.location.origin}
       >
         <Routes>
