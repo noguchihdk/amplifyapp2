@@ -6,8 +6,8 @@ import App from "./App";
 
 ReactDOM.render(
   <Auth0Provider
-    domain="nttdata-partner.auth0.com"
-    clientId="hrfJqQ6pE4EmWuVSiuBH6GnNSTBLLck7"
+    domain="nttdata-bxo.jp.auth0.com"
+    clientId="vt3mQO6LHtKKaY7jH7JjyMyOvx7Y1lWO"
     redirectUri={window.location.origin}
     loginRedirectUri={window.location.origin}
   >
